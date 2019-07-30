@@ -20,7 +20,7 @@ Note: the files for each structure are in order from input to output and accumul
 * data/5udc/5udc.pdb - raw PDB
 * data/5udc/5udc_noloop_noseqres.pdb — manually removed loop from ATOM lines and MISSING RESIDUES and programmatically removed loop from SEQRES.
 * data/5udc/5udc_mdtraj_noloop_noseqres_nogap.pdb — mdtraj intermediate (with residue numbers renumbered, gaps edited, and SEQRES copied from 5udc_noloop_noseqres.pdb)
-* data/5udc/5udc_clean_nolongterms_noseqres_nogap.pdb — Ran PDBFixer on 5udc_mdtraj_noloop_noseqres_nogap.pdb -- missing residues not in long (> 10 residues) terminal fragments added back in.
+* data/5udc/5udc_clean_nolongterms_noloop_noseqres_nogap.pdb — Ran PDBFixer on 5udc_mdtraj_noloop_noseqres_nogap.pdb -- missing residues not in long (> 10 residues) terminal fragments added back in.
 * data/5udc/5udc_clean_nolongterms_noseqres_nogap_splitchain.pdb — F protein chains split into two chains
 * data/5udc/5udc_clean_nolongterms_noseqres_nogap_splitchain_capped.pdb — chains capped using PDBFixer
 
