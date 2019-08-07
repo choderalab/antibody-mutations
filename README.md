@@ -28,7 +28,7 @@ Note: the files for each structure are in order from input to output and accumul
 
 4jhw
 * data/4jhw/4jhw.pdb — raw PDB
-* data/4jhw/4jhw_noloop_seqressplit.pdb - deleted residues that are not present in 5udc, 4jha, 5k6f
+* data/4jhw/4jhw_noloop.pdb - deleted residues that are not present in 5udc, 4jha, 5k6f
 * data/4jhw/4jhw_noloop_seqressplit.pdb - split chain in SEQRES near missing loop that will not be added back in
 * data/4jhw/4jhw_splitchain.pdb - F protein chain split into two chains
 * data/4jhw/4jhw_splitchain_capped.pdb - chains capped using PDBFixer
