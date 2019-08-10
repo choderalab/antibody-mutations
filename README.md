@@ -40,3 +40,9 @@ Note: the files for each structure are in order from input to output and accumul
 * Load 4jhw_splitchain.pdb into split_chain_and_cap.ipynb. Follow PDBFixer protocol (findMissingResidues(), findMissingAtoms(), addMissingAtoms()) to add missing terminal atoms. Save topology and positions with chains capped to 4jhw_splitchain_capped.pdb.
 * Manually copy the SEQRES from 4jhw_seqressplit.pdb to the top of 4jhw_splitchain_capped.pdb.
 * Load 4jhw_splitchain_capped.pdb into clean_pdb.ipynb. Follow PDBFixer protocol (findMissingResidues(), remove terminal missing fragments from fixer.missingResidues, findNonStandardResidues(), removeHeterogens, findMissingAtoms(), addMissingAtoms()). Write to 4jhw_clean.pdb.
+
+## Remove F protein head or Antibody tail
+### Scripts
+delete_residues.ipynb
+### Description
+This script deletes residues at the n-terminus or c-terminus as specified by the user. It caps the chain at the terminus with deleted residues.
