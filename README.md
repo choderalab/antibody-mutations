@@ -36,9 +36,8 @@ Note: the files for each structure are in order from input to output and accumul
 ### Example protocol
 4jhw
 * Load 4jhw.pdb into edit_seqres.ipynb to delete residues and split chain in the SEQRES near missing loop that will not be added back in. Write this to 4jhw_noloop.pdb (after deleting residues), then 4jhw_noloop_seqressplit.pdb.
-* Load 4jhw.pdb into split_chain_and_cap.ipynb. Save topology and positions with chain split to 4jhw_splitchain.pdb.
-* Load 4jhw_splitchain.pdb into split_chain_and_cap.ipynb. Follow PDBFixer protocol (findMissingResidues(), findMissingAtoms(), addMissingAtoms()) to add missing terminal atoms. Save topology and positions with chains capped to 4jhw_splitchain_capped.pdb.
-* Manually copy the SEQRES from 4jhw_seqressplit.pdb to the top of 4jhw_splitchain_capped.pdb.
+* Load 4jhw.pdb into split_chain_and_cap.ipynb. Use the split_chain function to save topology and positions with chain split to 4jhw_splitchain.pdb. Then use the cap_chain function to save topology and positions with missing terminal atoms added to 4jhw_splitchain_capped.pdb.
+* Manually copy the SEQRES from 4jhw_noloop_seqressplit.pdb to the top of 4jhw_splitchain_capped.pdb.
 * Load 4jhw_splitchain_capped.pdb into clean_pdb.ipynb. Follow PDBFixer protocol (findMissingResidues(), remove terminal missing fragments from fixer.missingResidues, findNonStandardResidues(), removeHeterogens, findMissingAtoms(), addMissingAtoms()). Write to 4jhw_clean.pdb.
 
 ## Remove F protein head or Antibody tail
@@ -46,3 +45,30 @@ Note: the files for each structure are in order from input to output and accumul
 delete_residues.ipynb
 ### Description
 This script deletes residues at the n-terminus or c-terminus as specified by the user. It caps the chain at the terminus with deleted residues.
+
+## Overlay high-resolution structures onto low-resolution structures
+
+## Modeling procedure (using UCSF chimera): 
+0. Load PDBs into Chimera
+   * File > Open > Select PDB file
+1. Overlay
+   * Tools > Structure comparison > Matchmaker (Use default settings)
+2. Merge models
+   * Tools > General controls > Model panel > Select the two models, choose “copy/combine"
+3. Delete low res reference chains
+   * Select > Chain 
+   * Actions > Atoms/Bonds > Delete 
+4. Change Chain IDs so that they correspond to chain IDs in the low res holo structure
+   * Tools > Structure editing > Change chain IDs
+5. File > Save PDB
+   * Save with respect to low res structure
+
+## Extract monomer from 5udc
+0. Load PDB into Chimera
+   * File > Open > Select PDB file
+1. Delete all chains for two of the monomers
+   * Select > Chain 
+   * Actions > Atoms/Bonds > Delete 
+   * Note: To select multiple chains at a time (e.g. chains F through L), enter into Chimera's command line: `select  :.f-l`
+   * Note: I kept H, L, F chains in the original PDB (aka chains A-D in the cleaned PDB) because these required adding the least number of missing loop residues
+2. File > Save PDB
