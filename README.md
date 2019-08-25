@@ -47,9 +47,7 @@ delete_residues.ipynb
 This script deletes residues at the n-terminus or c-terminus as specified by the user. It caps the chain at the terminus with deleted residues.
 
 ## Overlay high-resolution structures onto low-resolution structures
-
-## Modeling procedure (using UCSF chimera): 
-0. Load PDBs into Chimera
+0. Load PDBs into UCSF Chimera
    * File > Open > Select PDB file
 1. Overlay
    * Tools > Structure comparison > Matchmaker (Use default settings)
@@ -64,7 +62,7 @@ This script deletes residues at the n-terminus or c-terminus as specified by the
    * Save with respect to low res structure
 
 ## Extract monomer from 5udc
-0. Load PDB into Chimera
+0. Load PDB into UCSF Chimera
    * File > Open > Select PDB file
 1. Delete all chains for two of the monomers
    * Select > Chain 
