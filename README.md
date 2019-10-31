@@ -16,7 +16,7 @@ clean_pdb_rerefined.ipynb, clean_pdb_4jha.ipynb, edit_seqres.ipynb, split_chain_
     * Description of edit_seqres.ipynb: This script calls 3 functions to manipulate a SEQRES: 1) delete lines (or split_chains) 2) fill SEQRES lines that are not full (13 residues)3) reindex SEQRES lines so that indexes are consecutive. Output: PDB file with desired SEQRES sequence removed
 2. Split and cap F protein chain -- Use split_chain_and_cap.ipynb
     * Description of split_chain_and_cap.ipynb: This script uses the OpenMM Topology object to create a new topology with the F protein chain(s) split into two (because it contains a long missing loop that was not added back in) and caps them using PDBFixer.
-3. Manually copy the edited SEQRES to the PDB with the F protein split and capped.
+3. Manually copy CRYST1 line and the edited SEQRES to the PDB with the F protein split and capped.
 4. Clean PDB -- Use clean_pdb.ipynb
     * Description of clean_pdb.ipynb: This script uses PDBFixer to add missing residues and remove heterogens. Note: If the missing residues were part of a long terminal fragment (i.e. > 10 residues), then they will not be added them back in.
 
@@ -50,6 +50,17 @@ Note: the files for each structure are in order from input to output and accumul
 For this structure, remove the 99-109 region (and the linker) and then split the chain at this region, using split_chain_and_cap.ipynb. There are no missing residues so no need to clean with PDBFixer.
 ### Instructions 4jha
 For this structure, add missing residues based on 4jhw antibody using clean_4jha.ipynb. There is no need to split chains here.
+### Instructions for 5udc trimer F protein + single antibody
+1. Determine antibody with best electron density and use UCSF Chimera to remove chains from the unwanted antibodies.
+### Instructions for 4jhw trimer F protein + single antibody
+1. Copy 4jhw_final_v2_refmac1_clean.pdb to new file 4jhw_final_v2_refmac1_clean_trimer.pdb.
+2. Load 4jhw_final_v2_refmac1_clean_trimer.pdb as "Biological Assembly" in UCSF Chimera
+* Render biological assembly: Model panel > biological unit
+* Combine the assembly into one model: Copy/combine
+* Save the PDB: File > Save PDB 
+3. Remove chains of unwanted antibodies in Chimera
+* Change chain ids to match 5udc trimer F protein chains: Tools > Structure editing > Change chain IDs
+* Save the PDB: File > Save PDB (renumbered/holo/nonoverlay/4jhw_final_v2_refmac1_clean_trimer_single_ab.pdb)
 
 ## Remove F protein head or Antibody tail
 ### Scripts
