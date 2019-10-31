@@ -4,6 +4,7 @@ from simtk.unit import *
 from sys import stdout
 import os
 import pandas as pd
+import openmmtools
 
 # Set parameters
 input_file = sys.argv[1]
@@ -20,7 +21,7 @@ with open(output_prefix + '.xml', 'r') as f:
 	system = XmlSerializer.deserialize(f.read())
 
 # Set up integrator
-integrator = LangevinIntegrator(300*kelvin, 1/picosecond, 4*femtosecond)
+integrator = openmmtools.integrators.LangevinIntegrator(300*kelvin, 1/picosecond, 4*femtosecond)
 
 # Set up platform
 platform = Platform.getPlatformByName('CUDA')
@@ -36,7 +37,7 @@ simulation.loadCheckpoint(output_prefix + '.chk')
 simulation.reporters.append(StateDataReporter(output_prefix + '.restarted.csv', 12500, time=True, step=True,
         potentialEnergy=True, kineticEnergy=True, totalEnergy=True, volume=True, temperature=True))
 simulation.reporters.append(CheckpointReporter(output_prefix + '.restarted.chk', 12500))
-simulation.reporters.append(DCDReporter(output_prefix +  '.restarted.dcd', 12500, enforcePeriodicBox=True))
+simulation.reporters.append(DCDReporter(output_prefix +  '.restarted.dcd', 12500, enforcePeriodicBox=False))
 
 # Check last time step
 df_data = pd.read_csv(output_prefix + '.csv')
