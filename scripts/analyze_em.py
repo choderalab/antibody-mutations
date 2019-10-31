@@ -61,8 +61,8 @@ def plot_rmsd(trajectory_file, reference_pdb, title):
 # Create dict where key : trajectory file name, value : desired title for the plots
 d = {'apo.1': '4jha_clean', 'apo.2': '4jha_clean_variable', 'apo.3': '5k6f_splitchain_capped', 
     'apo.4': '5k6f_splitchain_capped_tail', 'apo.5': '4jhw_antibody', 
-    'apo.6': '4jhw_antibody_variable', 'apo.7': '5udc_antibody',
-    'apo.8': '5udc_antibody_variable','holo.nonoverlay.1': '4jhw_rerefined_clean', 
+    'apo.6': '4jhw_antibody_variable', 'apo.7': '5udc_monomer_antibody',
+    'apo.8': '5udc_monomer_antibody_variable','holo.nonoverlay.1': '4jhw_rerefined_clean', 
     'holo.nonoverlay.2': '4jhw_rerefined_clean_tail', 'holo.nonoverlay.3': '4jhw_rerefined_clean_tail_variable', 
     'holo.nonoverlay.4': '4jhw_rerefined_clean_variable', 'holo.nonoverlay.5': '5udc_rerefined_clean_monomer',
     'holo.nonoverlay.6':'5udc_rerefined_clean', 'holo.nonoverlay.7': '5udc_rerefined_clean_tail_monomer', 
@@ -76,22 +76,26 @@ d = {'apo.1': '4jha_clean', 'apo.2': '4jha_clean_variable', 'apo.3': '5k6f_split
     'holo.overlay.5k6f.2': '4jhw_5k6f_tail', 'holo.overlay.5k6f.3': '4jhw_variable_5k6f', 
     'holo.overlay.5k6f.4': '4jhw_variable_5k6f_tail', 'holo.overlay.5k6f.5': '5udc_monomer_5k6f', 
     'holo.overlay.5k6f.6': '5udc_tail_monomer_5k6f', 'holo.overlay.5k6f.7': '5udc_tail_variable_monomer_5k6f',
-    'holo.overlay.5k6f.8': '5udc_variable_monomer_5k6f', 'apo.9': '5udc_antibody', 
-    'apo.10': '5udc_variable_antibody', 'apo.11': '4jhw_f', 'apo.12': '4jhw_tail_f', 'apo.13': '5udc_monomer_f', 
-    'apo.14': '5udc_tail_monomer_f', 'apo.15': '5udc_f', 'apo.16': '5udc_tail_f'}
+    'holo.overlay.5k6f.8': '5udc_variable_monomer_5k6f', 'holo.overlay.5k6f.9': '5udc_5k6f', 
+    'holo.overlay.5k6f.10': '5udc_tail_5k6f', 'apo.9': '5udc_antibody', 
+    'apo.10': '5udc_antibody_variable', 'apo.11': '4jhw_f', 'apo.12': '4jhw_f_tail', 'apo.13': '5udc_monomer_f', 
+    'apo.14': '5udc_monomer_f_tail', 'apo.15': '5udc_f', 'apo.16': '5udc_f_tail'}
 
 infile_prefix = "/data/chodera/zhangi/vir_collaboration/data/em_output/"
 outfile_prefix = "/data/chodera/zhangi/vir_collaboration/data/em_figures/"
 
+restarted = ['holo.nonoverlay.5', 'holo.nonoverlay.6', 'holo.overlay.4jha.1', 'holo.overlay.4jha.5',
+'holo.overlay.5k6f.1', 'holo.overlay.5k6f.5', 'holo.overlay.5k6f.9', 'holo.overlay.5k6f.10']
 for k, v in sorted(d.items()):
-    print("Trying: ", v)
-    state_data = infile_prefix + k + '.50ns.csv'
-    ref_pdb = infile_prefix + k + '.50ns.minimized.pdb'
-    traj = infile_prefix + k + '.50ns.solute.dcd'
-    if 'holo' in k: # For restarted sims only, remove this in future analysis
-        state_data = infile_prefix + k + '.50ns.combined.csv'
+    if 'apo' in k: # REMOVE THIS IN FUTURE RUNS
+        print("Trying: ", v)
+        state_data = infile_prefix + k + '.50ns.csv'
         ref_pdb = infile_prefix + k + '.50ns.minimized.pdb'
-        traj = infile_prefix + k + '.50ns.combined.solute.dcd'
-    plot_all(state_data, v)
-    plot_rmsd(traj, ref_pdb, v)
+        traj = infile_prefix + k + '.50ns.solute.dcd'
+        if k in restarted: # For restarted sims only, remove this in future analysis
+            state_data = infile_prefix + k + '.50ns.combined.csv'
+            ref_pdb = infile_prefix + k + '.50ns.minimized.pdb'
+            traj = infile_prefix + k + '.50ns.combined.solute.dcd'
+        plot_all(state_data, v)
+        plot_rmsd(traj, ref_pdb, v)
     print('done')
