@@ -19,6 +19,7 @@ clean_pdb_rerefined.ipynb, clean_pdb_4jha.ipynb, edit_seqres.ipynb, split_chain_
 3. Manually copy CRYST1 line and the edited SEQRES to the PDB with the F protein split and capped.
 4. Clean PDB -- Use clean_pdb.ipynb
     * Description of clean_pdb.ipynb: This script uses PDBFixer to add missing residues and remove heterogens. Note: If the missing residues were part of a long terminal fragment (i.e. > 10 residues), then they will not be added them back in.
+5. Add CRYST1 line from the original PDB if the final PDB doesn't contain it.
 
 ### Input files
 data/4jhw/4jhw.pdb and data/5udc/5udc.pdb
@@ -52,6 +53,7 @@ For this structure, remove the 99-109 region (and the linker) and then split the
 For this structure, add missing residues based on 4jhw antibody using clean_4jha.ipynb. There is no need to split chains here.
 ### Instructions for 5udc trimer F protein + single antibody
 1. Determine antibody with best electron density and use UCSF Chimera to remove chains from the unwanted antibodies.
+2. Add CRYST1 line from the original PDB if the final PDB doesn't contain it
 ### Instructions for 4jhw trimer F protein + single antibody
 1. Copy 4jhw_final_v2_refmac1_clean.pdb to new file 4jhw_final_v2_refmac1_clean_trimer.pdb.
 2. Load 4jhw_final_v2_refmac1_clean_trimer.pdb as "Biological Assembly" in UCSF Chimera
@@ -61,6 +63,7 @@ For this structure, add missing residues based on 4jhw antibody using clean_4jha
 3. Remove chains of unwanted antibodies in Chimera
 * Change chain ids to match 5udc trimer F protein chains: Tools > Structure editing > Change chain IDs
 * Save the PDB: File > Save PDB (renumbered/holo/nonoverlay/4jhw_final_v2_refmac1_clean_trimer_single_ab.pdb)
+4. Add CRYST1 line from the original PDB if the final PDB doesn't contain it
 
 ## Remove F protein head or Antibody tail
 ### Scripts
