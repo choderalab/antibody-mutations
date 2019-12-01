@@ -1,8 +1,7 @@
 
-;	File 'mdout.mdp' was generated
-;	By user: dseelig (65004)
-;	On host: bart
-;	At date: Tue May 11 10:26:14 2004
+;	File '03_equilibration.mdp' was generated
+;	By user: Ivy Zhang
+;	At date: Sun Dec 1 12:11 2019
 ;
 
 ; VARIOUS PREPROCESSING OPTIONS
@@ -11,7 +10,7 @@ include                  =
 define                   = 
 
 ; RUN CONTROL PARAMETERS
-integrator               = md
+integrator               = sd
 ; Start time and timestep in ps
 tinit                    = 0
 dt                       = 0.002
@@ -118,7 +117,7 @@ implicit_solvent         = No
 
 ; OPTIONS FOR WEAK COUPLING ALGORITHMS
 ; Temperature coupling  
-tcoupl                   = v-rescale
+tcoupl                   = no
 ; Groups to couple separately
 tc-grps                  = System
 ; Time constant (ps) and reference temperature (K)
@@ -128,9 +127,9 @@ ref-t                    = 298
 Pcoupl                   = Parrinello-Rahman
 Pcoupltype               = Isotropic
 ; Time constant (ps), compressibility (1/bar) and reference P (bar)
-tau-p                    = 5
-compressibility          = 4.6E-5
-ref-p                    = 1
+tau-p                    = 2.0
+compressibility          = 4.5E-5
+ref-p                    = 1.0
 ; Random seed for Andersen thermostat
 andersen_seed            = 815131
 
@@ -150,7 +149,7 @@ gen-temp                 = 298
 gen-seed                 = 173529
 
 ; OPTIONS FOR BONDS    
-constraints              = all-bonds
+constraints              = h-bonds
 ; Type of constraint algorithm
 constraint-algorithm     = Lincs
 ; Do not constrain the start configuration
@@ -158,7 +157,7 @@ unconstrained-start      = yes
 ; Use successive overrelaxation to reduce the number of shake iterations
 Shake-SOR                = no
 ; Relative tolerance of shake
-shake-tol                = 1e-04
+shake-tol                = 1e-05
 ; Highest order in the expansion of the constraint coupling matrix
 lincs-order              = 6
 ; Number of iterations in the final step of LINCS. 1 is fine for
@@ -202,11 +201,13 @@ dihre-tau                = 0
 nstdihreout              = 100
 
 ; Free energy control stuff
-free_energy              = yes
-init_lambda              = 0
-delta_lambda             = 0.00002
-sc-alpha                 = 0
-sc-sigma                 = 0.3
+free-energy              = no
+init-lambda              = 0
+delta-lambda             = 0;e-5
+sc-alpha                 = 0.3
+sc-coul = yes
+sc-sigma                 = 0.25
+sc-power = 1
 
 refcoord-scaling = all
 
