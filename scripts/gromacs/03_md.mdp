@@ -1,5 +1,5 @@
 
-;	File '04_md.mdp' was generated
+;	File '03_md.mdp' was generated
 ;	By user: Ivy Zhang
 ;	At date: Sun Dec 1 12:11 2019
 ;
@@ -121,13 +121,13 @@ tcoupl                   = no
 ; Groups to couple separately
 tc-grps                  = System
 ; Time constant (ps) and reference temperature (K)
-tau-t                    = 0.1
+http://www.bevanlab.biochem.vt.edu/Pages/Personal/justin/gmx-tutorials/free_energy/03_workflow.html                    = 1.0
 ref-t                    = 298
 ; Pressure coupling     
 Pcoupl                   = Parrinello-Rahman
 Pcoupltype               = Isotropic
 ; Time constant (ps), compressibility (1/bar) and reference P (bar)
-tau-p                    = 2.0
+tau-p                    = 1.0
 compressibility          = 4.5E-5
 ref-p                    = 1.0
 ; Random seed for Andersen thermostat
