@@ -203,9 +203,10 @@ nstdihreout              = 100
 ; Free energy control stuff
 free_energy              = yes
 init_lambda              = 0
-delta_lambda             = 0.00002
-sc-alpha                 = 0
-sc-sigma                 = 0.3
+delta_lambda             = 0.00004
+sc-alpha                 = 0.3
+sc-sigma                 = 0.25
+sc-power                 = 1
 
 refcoord-scaling = all
 
