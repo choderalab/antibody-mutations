@@ -13,7 +13,7 @@ CUDA: 8.0
 clean_pdb_rerefined.ipynb, clean_pdb_4jha.ipynb, edit_seqres.ipynb, split_chain_and_cap.ipynb
 ### Instructions (for 5udc and 4jhw)
 1. Preprocess PDBs -- Use edit_seqres.ipynb to programatically split delete lines and/or split chains in the SEQRES.
-    * Description of edit_seqres.ipynb: This script calls 3 functions to manipulate a SEQRES: 1) delete lines (or split_chains) 2) fill SEQRES lines that are not full (13 residues)3) reindex SEQRES lines so that indexes are consecutive. Output: PDB file with desired SEQRES sequence removed
+    * Description of edit_seqres.ipynb: This script calls 3 functions to manipulate a SEQRES: 1) delete lines (or split_chains) 2) fill SEQRES lines that are not full (13 residues) 3) reindex SEQRES lines so that indexes are consecutive. Output: PDB file with desired SEQRES sequence removed
 2. Split and cap F protein chain -- Use split_chain_and_cap.ipynb
     * Description of split_chain_and_cap.ipynb: This script uses the OpenMM Topology object to create a new topology with the F protein chain(s) split into two (because it contains a long missing loop that was not added back in) and caps them using PDBFixer.
 3. Manually copy CRYST1 line and the edited SEQRES to the PDB with the F protein split and capped.
@@ -65,7 +65,7 @@ For this structure, add missing residues based on 4jhw antibody using clean_4jha
 * Save the PDB: File > Save PDB (renumbered/holo/nonoverlay/4jhw_final_v2_refmac1_clean_trimer_single_ab.pdb)
 4. Add CRYST1 line from the original PDB if the final PDB doesn't contain it
 
-## Remove F protein head or Antibody tail
+## Remove F protein head or Antibody constant
 ### Scripts
 delete_residues.ipynb
 ### Description
@@ -76,11 +76,11 @@ This script deletes residues at the n-terminus or c-terminus as specified by the
    * File > Open > Select PDB file
 1. Overlay
    * Tools > Structure comparison > Matchmaker (Use default settings)
-2. Merge models
-   * Tools > General controls > Model panel > Select the two models, choose “copy/combine"
-3. Delete low res reference chains
+2. Delete low res reference chains
    * Select > Chain 
    * Actions > Atoms/Bonds > Delete 
+3. Merge models
+   * Tools > General controls > Model panel > Select the two models, choose “copy/combine"
 4. Change Chain IDs so that they correspond to chain IDs in the low res holo structure
    * Tools > Structure editing > Change chain IDs
 5. File > Save PDB
