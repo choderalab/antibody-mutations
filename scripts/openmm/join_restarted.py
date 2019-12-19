@@ -3,8 +3,7 @@ import pandas as pd
 
 # Specify file names that need to be joined
 file_prefix = '/data/chodera/zhangi/vir_collaboration/data/em_output/'
-files = ['holo.nonoverlay.5', 'holo.nonoverlay.6', 'holo.overlay.4jha.1', 'holo.overlay.4jha.5', 'holo.overlay.5k6f.1',
-'holo.overlay.5k6f.5', 'holo.overlay.5k6f.9', 'holo.overlay.5k6f.10']
+files = ['holo.nonoverlay.13', 'holo.nonoverlay.14']
 
 # Choose file paths for original and restarted trajectories and csvs
 for file in files:
@@ -18,7 +17,9 @@ for file in files:
 	## JOIN CSVs
 	print("\tJoining CSVs")
 	df_orig = pd.read_csv(original_data_file)
+	last_time = df_orig.iloc[-1]['Time (ps)']
 	df_re = pd.read_csv(restarted_data_file)
+	df_re['Time (ps)'] = df_re['Time (ps)'].apply(lambda x : x + last_time)
 	n_orig_rows = df_orig.shape[0]
 	df_orig = df_orig.append(df_re.iloc[:1000-n_orig_rows])
 	df_orig.to_csv(file_prefix + file + '.50ns.combined.csv', index=False)

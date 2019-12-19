@@ -1,0 +1,86 @@
+;====================================================
+; Run non-equilibrium transition
+;====================================================
+
+; RUN CONTROL
+;----------------------------------------------------
+integrator   = sd            ; stochastic leap-frog integrator
+nsteps       = 25000         ; 4 * 25,000 fs = 100 ps
+dt           = 0.004         ; 4 fs
+comm-mode    = Linear        ; remove center of mass translation
+nstcomm      = 1             ; frequency for center of mass motion removal
+
+; OUTPUT CONTROL
+;----------------------------------------------------
+nstxout          = 5000      ; save coordinates to .trr every 20 ps
+nstvout          = 5000      ; save velocities to .trr every 20 ps
+nstfout          = 5000      ; save forces to .trr every 20 ps
+nstxtcout        = 5000      ; xtc compressed trajectory output every 20 ps
+xtc-precision    = 1000      ; precision with which to write to the compressed trajectory file
+nstlog           = 500       ; update log file every 2 ps
+nstenergy        = 500       ; save energies every 2 ps
+nstcalcenergy    = 1         ; calculate energies at every
+
+; BONDS
+;----------------------------------------------------
+constraint_algorithm   = lincs      ; holonomic constraints
+constraints            = all-bonds  ; constrain all bonds (you need this with the pmx setup)
+lincs-iter             = 2          ; accuracy of LINCS (1 is default)
+lincs-order            = 6          ; also related to accuracy (4 is default)
+lincs-warnangle        = 30         ; maximum angle that a bond can rotate before LINCS will complain (30 is default)
+continuation           = no         ; formerly known as 'unconstrained-start' - useful for exact continuations and reruns
+
+; NEIGHBOR SEARCHING
+;----------------------------------------------------
+cutoff-scheme         = group  ; group or Verlet
+ns-type               = grid   ; search neighboring grid cells
+nstlist               = 10     ; 20 fs (default is 10)
+rlist                 = 1.2    ; short-range neighborlist cutoff (in nm)
+pbc                   = xyz    ; 3D PBC
+domain-decomposition  = no
+
+; ELECTROSTATICS & EWALD
+;----------------------------------------------------
+coulombtype      = PME                       ; Particle Mesh Ewald for long-range electrostatics
+rcoulomb         = 1.2                       ; short-range electrostatic cutoff (in nm)
+ewald-geometry   = 3d                        ; Ewald sum is performed in all three dimensions
+pme-order        = 4                         ; interpolation order for PME (default is 4)
+fourierspacing   = 0.12                      ; grid spacing for FFT
+ewald-rtol       = 1e-5                      ; relative strength of the Ewald-shifted direct potential at rcoulomb
+optimize-fft     = no                        ; don't calculate the optimal FFT plan for the grid at startup.
+
+; VAN DER WAALS
+;----------------------------------------------------
+vdwtype           = Switch       ; potential switched off at rvdw-switch to reach zero at rvdw
+rvdw-switch       = 1.0          ; where to start switching the LJ potential
+rvdw              = 1.1          ; van der Waals cutoff (in nm)
+DispCorr          = EnerPres     ; apply analytical long range dispersion corrections for Energy and Pressure
+
+; TEMPERATURE COUPLING (Langevin)
+;----------------------------------------------------
+tc-grps           = System
+tau-t             = 1.0
+ref-t             = 298
+gen-vel           = yes          ; Velocity generation (if gen-vel is 'yes', continuation should be 'no')
+gen-temp          = 298
+gen-seed          = -1           ; pseudo-random generator
+
+; PRESSURE COUPLING
+;----------------------------------------------------
+pcoupl           = Parrinello-Rahman
+pcoupltype       = isotropic            ; uniform scaling of box vectors
+tau_p            = 2.0                  ; time constant (ps)
+ref_p            = 1.0                  ; reference pressure (bar)
+compressibility  = 4.5e-05              ; isothermal compressibility of water (bar^-1)
+refcoord-scaling = none
+
+; FREE ENERGY
+;----------------------------------------------------
+free-energy       = yes
+init-lambda       = 0         ; start from state A
+delta-lambda      = 2e-5      ; complete transition in 50,000 steps
+sc-coul           = yes       ; use soft-core also for coulombic interactions
+sc-alpha          = 0.3       ; Note we are using the soft-core in Gapsys, Seeliger, de Groot (2012) JCTC, 8(7), pp 2373–2382
+sc-sigma          = 0.25      ;
+sc-power          = 1         ;
+nstdhdl           = 1         ; write to dhdl at each step

@@ -19,4 +19,4 @@
 # job name (default = name of script file)
 #BSUB -J "holo nonoverlay 6 restarted"
 
-python restart_em.py "/data/chodera/zhangi/vir_collaboration/data/em_output/holo.nonoverlay.6.50ns.minimized.pdb"
+python restart_em_state.py "/data/chodera/zhangi/vir_collaboration/data/em_output/holo.nonoverlay.6.50ns.minimized.pdb"
