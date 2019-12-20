@@ -1,4 +1,5 @@
 REMARK   1 CREATED WITH OPENMM 7.4, 2019-12-19
+CRYST1  103.780  126.310  162.310  90.00 102.56  90.00 P 1 21 1      6          
 HELIX    1   1 THR F   74  THR F   97  1                                  24
 HELIX    2   2 ALA X  149  HIS X  159  1                                  11
 HELIX    3   3 GLU X  163  ALA X  170  1                                   8

@@ -1,4 +1,5 @@
 REMARK   1 CREATED WITH OPENMM 7.4, 2019-12-19
+CRYST1  229.020  229.020  343.250  90.00  90.00 120.00 P 32 2 1     54          
 HELIX    1   1 THR A   74  LEU A   96  1                                  23
 HELIX    2   2 ALA X  149  LEU X  158  1                                  10
 HELIX    3   3 GLU X  163  LEU X  172  1                                  10
