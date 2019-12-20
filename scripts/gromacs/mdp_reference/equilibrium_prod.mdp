@@ -1,0 +1,73 @@
+;====================================================
+; Equilibrium Simulations
+;====================================================
+
+; RUN CONTROL
+;----------------------------------------------------
+integrator   = sd            ; stochastic leap-frog integrator
+nsteps       = 2500000       ; 2 * 2,500,000 fs = 5 ns
+dt           = 0.002         ; 2 fs
+comm-mode    = Linear        ; remove center of mass translation
+nstcomm      = 100           ; frequency for center of mass motion removal
+
+; OUTPUT CONTROL
+;----------------------------------------------------
+nstxout          = 0         ; do not save coordinates to .trr
+nstvout          = 0         ; do not save velocities to .trr
+nstfout          = 0         ; do not save forces to .trr
+nstxtcout        = 20000     ; xtc compressed trajectory output every 40 ps
+xtc-precision    = 1000      ; precision with which to write to the compressed trajectory file
+nstlog           = 5000      ; update log file every 10 ps
+nstenergy        = 5000      ; save energies every 10 ps
+nstcalcenergy    = 100       ; calculate energies every 100 steps (default=100)
+
+; BONDS
+;----------------------------------------------------
+constraint_algorithm   = lincs      ; holonomic constraints
+constraints            = all-bonds  ; constrain all bonds (you need this with the pmx setup)
+lincs-iter             = 2          ; accuracy of LINCS (1 is default)
+lincs-order            = 6          ; also related to accuracy (4 is default)
+lincs-warnangle        = 30         ; maximum angle that a bond can rotate before LINCS will complain (30 is default)
+continuation           = yes        ; formerly known as 'unconstrained-start' - useful for exact continuations and reruns
+
+; NEIGHBOR SEARCHING
+;----------------------------------------------------
+cutoff-scheme         = Verlet ; group or Verlet
+ns-type               = grid   ; search neighboring grid cells
+nstlist               = 10     ; 20 fs (default is 10)
+rlist                 = 1.1    ; short-range neighborlist cutoff (in nm)
+pbc                   = xyz    ; 3D PBC
+
+; ELECTROSTATICS & EWALD
+;----------------------------------------------------
+coulombtype      = PME                       ; Particle Mesh Ewald for long-range electrostatics
+rcoulomb         = 1.1                       ; short-range electrostatic cutoff (in nm)
+ewald-geometry   = 3d                        ; Ewald sum is performed in all three dimensions
+pme-order        = 4                         ; interpolation order for PME (default is 4)
+fourierspacing   = 0.12                      ; grid spacing for FFT
+ewald-rtol       = 1e-5                      ; relative strength of the Ewald-shifted direct potential at rcoulomb
+optimize-fft     = no                        ; don't calculate the optimal FFT plan for the grid at startup.
+
+; VAN DER WAALS
+;----------------------------------------------------
+vdw-type          = Cut-off      ; potential switched off at rvdw-switch to reach zero at rvdw
+rvdw              = 1.1          ; van der Waals cutoff (in nm)
+DispCorr          = EnerPres     ; apply analytical long range dispersion corrections for Energy and Pressure
+
+; TEMPERATURE COUPLING (Langevin)
+;----------------------------------------------------
+tc-grps           = System
+tau-t             = 1.0
+ref-t             = $TEMP
+gen-vel           = no           ; Velocity generation (if gen-vel is 'yes', continuation should be 'no')
+gen-temp          = $TEMP
+gen-seed          = -1
+
+; PRESSURE COUPLING
+;----------------------------------------------------
+pcoupl           = Parrinello-Rahman
+pcoupltype       = isotropic            ; uniform scaling of box vectors
+tau_p            = 2.0                  ; time constant (ps)
+ref_p            = 1.0                  ; reference pressure (bar)
+compressibility  = 4.5e-05              ; isothermal compressibility of water (bar^-1)
+refcoord-scaling = none

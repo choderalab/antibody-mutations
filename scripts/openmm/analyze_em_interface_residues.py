@@ -7,14 +7,28 @@ import itertools
 import numpy as np
 from simtk.openmm.app import *
 
-# Description: Given two chains, a distance cutoff for the interface, and a trajectory frame, 
-# identify the interface residues
-# chain_A : (int) index of one of the chains for the interface
-# chain_B : (int) index of the other chain for the interface
-# trajectory: (mdtraj.Trajectory) the trajectory from which to choose a frame
-# frame : (int) the index of the frame of the trajectory to compute distances on
-# cutoff : (float) interface cutoff distance in nanometers, not inclusive for the cutoff value
 def identify_contacts(chain_A, chain_B, solute_reference_openmm, trajectory, frame, cutoff):
+    """Identify interface residues between two chains at a given distance cutoff.
+    
+    Parameters
+    ----------
+    chain_A : int
+        The index of one of the chains in the interface
+    chain_B : int
+        The index of the other chain in the interface
+    trajectory: mdtraj.Trajectory
+        The trajectory from which to choose a frame
+    frame : int
+        The index of the frame of the trajectory to compute distances on
+    cutoff : float
+        The cutoff distance definig the interface in nanometers, not inclusive
+
+    Returns
+    -------
+    contacts : list of pairs (as arrays)
+        The pairs of contacts, where each contact is a residue id (concatenated to the insertion code if it exists).
+    """
+
     # Get trajectory frame
     traj = trajectory[frame]
     
@@ -42,15 +56,32 @@ def identify_contacts(chain_A, chain_B, solute_reference_openmm, trajectory, fra
             contacts.append(mapped_pair) 
     return contacts
 
+def identify_interface_residues_4(reference_pdb, reference_withH_pdb, trajectory, cutoffs, frames, is_5udc=False):
+    """Identify the interface residues for all pairs of chains involved in the interface.
+    Note: This is for proteins with 4 chains.
 
-# Description: Given a reference pdb file path, a file path to save the reference pdb after adding hydrogens, 
-# a trajectory, and a list of chain pairs, identify the interface residues in each chain
-# reference_pdb : (str) filepath for reference PDB
-# reference_withH_pdb : (str) filepath for which to save the reference PDB after adding hydrogens
-# trajectory : (mdtraj.Trajectory) trajectory from which to get frames from
-# cutoffs : (list of flots) Distances defining the interface (not inclusive, in nanometers)
-# frames : (list of ints) Indexes of frames from which to compute distances
-def identify_interface_residues_4(reference_pdb, reference_withH_pdb, trajectory, cutoffs, frames):
+    Parameters
+    ----------
+    reference_pdb : string
+        The filepath for the reference PDB
+    reference_withH_pdb : string
+        The filepath to save the reference PDB after adding hydrogens
+    trajectory : mdtraj.Trajectory
+        The trajectory from which to get frames from
+    cutoffs : list of floats
+        The cutoff distance definig the interface in nanometers, not inclusive
+    frames : list of ints
+        The indexes of the frames from which to compute distances
+    is_5udc : bool
+        Specifies whether the pdb is a variant of 5udc, i.e. uses chains E and G for the antibody,
+        instead of chains H and L.
+
+    Returns
+    -------
+    rows: list of lists
+        Where each list contains the pdb, cutoff, frame, and interface residues for each chain
+    """
+
     # Load reference PDB
     forcefield = ForceField('amber14-all.xml', 'amber14/tip3pfb.xml')
     pdb = PDBFile(reference_pdb)
@@ -67,10 +98,16 @@ def identify_interface_residues_4(reference_pdb, reference_withH_pdb, trajectory
     rows = []
     for cutoff in cutoffs: 
         for frame in frames:
-            contacts_H_F = identify_contacts(0, 2, solute_reference_openmm, trajectory, frame, cutoff)
-            contacts_H_X = identify_contacts(0, 3, solute_reference_openmm, trajectory, frame, cutoff)
-            contacts_L_F = identify_contacts(1, 2, solute_reference_openmm, trajectory, frame, cutoff)
-            contacts_L_X = identify_contacts(1, 3, solute_reference_openmm, trajectory, frame, cutoff)
+            if not is_5udc: # Here, H represents antibody heavy chain and L reprsents antibody light chain (not necessarily chain IDs)
+                contacts_H_F = identify_contacts(0, 2, solute_reference_openmm, trajectory, frame, cutoff)
+                contacts_H_X = identify_contacts(0, 3, solute_reference_openmm, trajectory, frame, cutoff)
+                contacts_L_F = identify_contacts(1, 2, solute_reference_openmm, trajectory, frame, cutoff)
+                contacts_L_X = identify_contacts(1, 3, solute_reference_openmm, trajectory, frame, cutoff)
+            else:
+                contacts_H_F = identify_contacts(4, 6, solute_reference_openmm, trajectory, frame, cutoff)
+                contacts_H_X = identify_contacts(4, 7, solute_reference_openmm, trajectory, frame, cutoff)
+                contacts_L_F = identify_contacts(5, 6, solute_reference_openmm, trajectory, frame, cutoff)
+                contacts_L_X = identify_contacts(5, 7, solute_reference_openmm, trajectory, frame, cutoff)
 
             chain_H = []
             chain_L = []
@@ -98,15 +135,29 @@ def identify_interface_residues_4(reference_pdb, reference_withH_pdb, trajectory
             rows.append(row)
     return rows
 
-# Description: Given a reference pdb file path, a file path to save the reference pdb after adding hydrogens, 
-# a trajectory, and a list of chain pairs, identify the interface residues in each chain
-# reference_pdb : (str) filepath for reference PDB
-# reference_withH_pdb : (str) filepath for which to save the reference PDB after adding hydrogens
-# trajectory : (mdtraj.Trajectory) trajectory from which to get frames from
-# cutoffs : (list of flots) Distances defining the interface (not inclusive, in nanometers)
-# frames : (list of ints) Indexes of frames from which to compute distances
-
 def identify_interface_residues_12(reference_pdb, reference_withH_pdb, trajectory, cutoffs, frames):
+    """Identify the interface residues for all pairs of chains involved in the interface.
+    Note: This is for proteins with 12 chains.
+    
+    Parameters
+    ----------
+    reference_pdb : string
+        The filepath for the reference PDB
+    reference_withH_pdb : string
+        The filepath to save the reference PDB after adding hydrogens
+    trajectory : mdtraj.Trajectory
+        The trajectory from which to get frames from
+    cutoffs : list of floats
+        The cutoff distance definig the interface in nanometers, not inclusive
+    frames : list of ints
+        The indexes of the frames from which to compute distances
+
+    Returns
+    -------
+    rows: list of lists
+        Where each list contains the pdb, cutoff, frame, and interface residues for each chain
+    """
+
     # Load reference PDB
     forcefield = ForceField('amber14-all.xml', 'amber14/tip3pfb.xml')
     pdb = PDBFile(reference_pdb)
@@ -208,29 +259,20 @@ def identify_interface_residues_12(reference_pdb, reference_withH_pdb, trajector
     return rows
 
 # Set global parameters
-combined = ['holo.nonoverlay.5', 'holo.nonoverlay.6', 'holo.overlay.4jha.1', 'holo.overlay.4jha.5', 
-'holo.overlay.5k6f.1', 'holo.overlay.5k6f.5'] # Trajectories that needed to be restarted and combined
+combined = ['holo.nonoverlay.13', 'holo.nonoverlay.14', 'holo.overlay.4jha.9', 'holo.overlay.4jha.10', 'holo.overlay.5k6f.11', 'holo.overlay.5k6f.12']
 cutoffs = [0.3, 0.5, 1.5]
 frames = [0, 499, 700]
 reference_prefix = "/data/chodera/zhangi/vir_collaboration/data/em_input/renumbered/"
-references = ["4jhw_final_v2_refmac1_clean.pdb", "4jhw_final_v2_refmac1_clean_tail.pdb", 
-                "4jhw_final_v2_refmac1_clean_tail_variable.pdb", "4jhw_final_v2_refmac1_clean_variable.pdb",
-              "5udc_final_v2_refmac1_clean_monomer.pdb", "5udc_final_v2_refmac1_clean_tail_monomer.pdb", 
-              "5udc_final_v2_refmac1_clean_tail_variable_monomer.pdb", "5udc_final_v2_refmac1_clean_variable_monomer.pdb",
-               "4jhw_5k6f_4jha.pdb", "4jhw_5k6f_tail_4jha.pdb", "4jhw_variable_5k6f_4jha.pdb", "4jhw_variable_5k6f_tail_4jha.pdb", 
-              "4jhw_5k6f.pdb", "4jhw_5k6f_tail.pdb", "4jhw_variable_5k6f.pdb", "4jhw_variable_5k6f_tail.pdb", 
-              "5udc_monomer_5k6f.pdb", "5udc_tail_monomer_5k6f.pdb",
-              "5udc_tail_variable_monomer_5k6f.pdb", "5udc_variable_monomer_5k6f.pdb"]
+references = ['4jhw_final_v2_refmac1_clean_trimer_single_ab.pdb', '5udc_final_v2_refmac1_clean_single_ab.pdb', 
+'4jhw_trimer_single_ab_4jha.pdb', '4jhw_trimer_single_ab_5k6f_4jha.pdb', '4jhw_trimer_single_ab_5k6f.pdb', '5udc_5k6f_single_ab.pdb']
 reference_withH_prefix = reference_prefix + "addH/"
 trajectory_prefix = "/data/chodera/zhangi/vir_collaboration/data/em_output/"
 trajectory_postfix = ".50ns.solute.dcd"
-trajectories = ["holo.nonoverlay.1", "holo.nonoverlay.2", "holo.nonoverlay.3", "holo.nonoverlay.4", 
-                "holo.nonoverlay.5", "holo.nonoverlay.7", "holo.nonoverlay.9", "holo.nonoverlay.11",
-               "holo.overlay.4jha.1",  "holo.overlay.4jha.2", "holo.overlay.4jha.3", "holo.overlay.4jha.4", 
-               "holo.overlay.5k6f.1", "holo.overlay.5k6f.2", "holo.overlay.5k6f.3", "holo.overlay.5k6f.4", 
-               "holo.overlay.5k6f.5", "holo.overlay.5k6f.6", "holo.overlay.5k6f.7", "holo.overlay.5k6f.8"]
+trajectories = ['holo.nonoverlay.13', 'holo.nonoverlay.14', 'holo.overlay.4jha.9', 
+'holo.overlay.4jha.10', 'holo.overlay.5k6f.11', 'holo.overlay.5k6f.12']
 
-# Create dataframe of interface residues for trajectories with 9 chains
+
+# Create dataframe of interface residues for trajectories with 4 chains
 rows_df_4 = []
 for ref, traj in zip (references, trajectories):
     print("Trying ", os.path.basename(traj))
@@ -244,6 +286,23 @@ for ref, traj in zip (references, trajectories):
 rows_df_4 = [sub_row_list for row_list in rows_df_4 for sub_row_list in row_list]
 pd.DataFrame(rows_df_4, columns=['trajectory_name', 'cutoff (nm)', 'frame', 'chain H', 'chain L', 'chain F', 'chain X']).to_csv("/data/chodera/zhangi/vir_collaboration/data/em_figures/df_interface_residues_4.csv", index=False)
 
+
+# Create dataframe of interface residues for trajectories with 8 chains
+rows_df_4 = []
+for ref, traj in zip (references, trajectories):
+    print("Trying ", os.path.basename(traj))
+    reference_pdb = reference_prefix + ref
+    reference_withH_pdb = reference_withH_prefix + os.path.basename(ref)[:-4] + "_withH.pdb"
+    trajectory = trajectory_prefix + traj + trajectory_postfix
+    if traj in combined:
+        trajectory = trajectory_prefix + traj + '.50ns.combined.solute.dcd'
+    if '5udc' in ref:
+        rows = identify_interface_residues_4(reference_pdb, reference_withH_pdb, trajectory, cutoffs, frames, is_5udc=True)
+    else:
+        rows = identify_interface_residues_4(reference_pdb, reference_withH_pdb, trajectory, cutoffs, frames)
+    rows_df_4.append(rows)
+rows_df_4 = [sub_row_list for row_list in rows_df_4 for sub_row_list in row_list]
+pd.DataFrame(rows_df_4, columns=['trajectory_name', 'cutoff (nm)', 'frame', 'chain Ab H', 'chain Ab L', 'chain F', 'chain X']).to_csv("/data/chodera/zhangi/vir_collaboration/data/em_figures/df_interface_residues_8.csv", index=False)
 
 # Create dataframe of interface residues for trajectories with 12 chains (5udc full)
 references = ["5udc_final_v2_refmac1_clean.pdb", "5udc_final_v2_refmac1_clean_tail.pdb", 
