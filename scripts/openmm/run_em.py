@@ -6,6 +6,7 @@ import os
 import openmmtools
 import time
 import progressbar
+from simtk.openmm import XmlSerializer
 
 # Set global parameters
 timestep = 4*femtosecond
@@ -75,7 +76,7 @@ PDBFile.writeFile(modeller.topology, positions_minimized, open(output_prefix + "
 # Set up reporters for state data, checkpoint file, and trajectory 
 simulation.reporters.append(StateDataReporter(output_prefix + '.csv', 12500, time=True, step=True,
         potentialEnergy=True, kineticEnergy=True, totalEnergy=True, volume=True, temperature=True))
-simulation.reporters.append(CheckpointReporter(output_prefix + '.chk', 12500))
+# simulation.reporters.append(CheckpointReporter(output_prefix + '.chk', 12500))
 simulation.reporters.append(DCDReporter(output_prefix +  '.dcd', 12500, enforcePeriodicBox=False))
 
 # Equilibrate
@@ -83,6 +84,10 @@ print('Equilibrating...')
 initial_time = time.time()
 for iteration in progressbar.progressbar(range(niterations)):
     simulation.step(nsteps)
+    state = simulation.context.getState(getPositions=True, getVelocities=True)
+    with open(output_prefix + '.state.xml', 'w') as outfile:
+        state_xml = XmlSerializer.serialize(state)
+        outfile.write(state_xml)
 elapsed_time = (time.time() - initial_time) * seconds
 simulation_time = niterations * nsteps * timestep
 print('    Equilibration took %.3f s for %.3f ns (%8.3f ns/day)' % (elapsed_time / seconds, simulation_time / nanoseconds, simulation_time / elapsed_time * day / nanoseconds))
