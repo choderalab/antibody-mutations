@@ -8,6 +8,7 @@ import pandas as pd
 
 # Set file names
 input_prefix = "/home/zhangi/choderalab/vir_collaboration/data/em_input/"
+output_prefix = "/data/chodera/zhangi/vir_collaboration/data/mm_gbsa/"
 input_file_PL = input_prefix + "holo/nonoverlay/" + sys.argv[1]
 input_file_P = input_prefix + "apo/" + sys.argv[2]
 input_file_L = input_prefix + "apo/" + sys.argv[3]
@@ -33,7 +34,7 @@ def addH(input_file, structure_type):
 			Contains structure with hydrogens
 	'''
 	print("Adding hydrogens ", input_file)
-	outfile_name = "/data/chodera/zhangi/vir_collaboration/data/mm_gbsa/" + structure_name + "_" + structure_type +  "_withH.pdb"
+	outfile_name = output_prefix + structure_name + "_" + structure_type +  "_withH.pdb"
 	pdb = PDBFile(input_file)
 	modeller = Modeller(pdb.topology, pdb.positions)
 	modeller.addHydrogens(forcefield, pH=7.4)
@@ -158,4 +159,4 @@ for i in range(10):
 	print(deltaG)
 	all_data.append([deltaG] + PL_data + P_data + L_data)
 df = pd.DataFrame(all_data, columns=['deltaG', 'PL initial energy', 'PL final energy', 'P initial energy', 'P final energy', 'L initial energy', 'L final energy'])
-df.to_csv("/data/chodera/zhangi/vir_collaboration/data/mm_gbsa/" + structure_name + "_initial_final_diffH_extracted.csv")
+df.to_csv(output_prefix + structure_name + "_initial_final_diffH_extracted.csv")
