@@ -1,0 +1,8 @@
+input_file_PL_WT=../input/WT.pdb
+input_file_PL_mutant=
+add_hydrogens=False
+output_directory=../output/example_sars_protonate1x_run1/
+name=sars
+protein_chains=A
+ligand_chains=B,C
+iterations=10
