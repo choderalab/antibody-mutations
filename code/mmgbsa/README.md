@@ -4,7 +4,7 @@ Assess the impact of mutations on antibody-antigen binding affinity
 ### File descriptions
 * mmgbsa.py
     * Script for running MM/GBSA. (See instructions.txt)
-*input.txt
+* input.txt
     * input_file_PL_WT
         * Path to input file containing WT protein-ligand complex on which to compute MM/GBSA
     * input_file_PL_mutant
@@ -22,8 +22,8 @@ Assess the impact of mutations on antibody-antigen binding affinity
         * Comma-separated chain ids of the ligand chains in the complex (as named in input_file)
     * iterations
         * Number of MM/GBSA estimates per complex.
-    * WT.pdb
-        * 6nb8_2ghv_sars structure (un-mutated, capped)
+* WT.pdb
+    * 6nb8_2ghv_sars structure (un-mutated, capped)
 
 
 ### Use
