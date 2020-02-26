@@ -12,11 +12,11 @@ CUDA: 8.0
 ### Scripts
 clean_pdb_rerefined.ipynb, clean_pdb_4jha.ipynb, edit_seqres.ipynb, split_chain_and_cap.ipynb
 ### Instructions (for 5udc and 4jhw)
-1. Preprocess PDBs -- Use edit_seqres.ipynb to programatically split delete lines and/or split chains in the SEQRES.
+1. Preprocess SEQRES -- Use edit_seqres.ipynb to programatically split delete lines and/or split chains in the SEQRES.
     * Description of edit_seqres.ipynb: This script calls 3 functions to manipulate a SEQRES: 1) delete lines (or split_chains) 2) fill SEQRES lines that are not full (13 residues) 3) reindex SEQRES lines so that indexes are consecutive. Output: PDB file with desired SEQRES sequence removed
-2. Split and cap F protein chain -- Use split_chain_and_cap.ipynb
-    * Description of split_chain_and_cap.ipynb: This script uses the OpenMM Topology object to create a new topology with the F protein chain(s) split into two (because it contains a long missing loop that was not added back in) and caps them using PDBFixer.
-3. Manually copy CRYST1 line and the edited SEQRES to the PDB with the F protein split and capped.
+2. Split F protein chain -- Use split_chain.ipynb
+    * Description of split_chain.ipynb: This script uses the OpenMM Topology object to create a new topology with the F protein chain(s) split into two (because it contains a long missing loop that was not added back in). Terminal atoms added to ends of chains using PDBFixer.
+3. Manually copy CRYST1 line and the edited SEQRES to the PDB with the F protein split.
 4. Clean PDB -- Use clean_pdb.ipynb
     * Description of clean_pdb.ipynb: This script uses PDBFixer to add missing residues and remove heterogens. Note: If the missing residues were part of a long terminal fragment (i.e. > 10 residues), then they will not be added them back in.
 5. Add CRYST1 line from the original PDB if the final PDB doesn't contain it.
@@ -31,7 +31,7 @@ Note: the files for each structure are in order from input to output and accumul
 * data/5udc/5udc_noloop.pdb - deleted residues that are not present in 4jhw, 4jha, 5k6f
 * data/5udc/5udc_noloop_seqressplit.pdb - split chain in SEQRES near missing loop that will not be added back in
 * data/5udc/5udc_splitchain.pdb - F protein chain split into two chains
-* data/5udc/5udc_splitchain_capped.pdb - chains capped using PDBFixer
+* data/5udc/5udc_splitchain_capped.pdb - terminal atoms added to ends of chains using PDBFixer
 * data/5udc/5udc_clean.pdb — missing residues not in long (> 10 residues) terminal fragments added back in
 
 4jhw
@@ -39,12 +39,12 @@ Note: the files for each structure are in order from input to output and accumul
 * data/4jhw/4jhw_noloop.pdb - deleted residues that are not present in 5udc, 4jha, 5k6f
 * data/4jhw/4jhw_noloop_seqressplit.pdb - split chain in SEQRES near missing loop that will not be added back in
 * data/4jhw/4jhw_splitchain.pdb - F protein chain split into two chains
-* data/4jhw/4jhw_splitchain_capped.pdb - chains capped using PDBFixer
+* data/4jhw/4jhw_splitchain_capped.pdb - terminal atoms added to ends of chains using PDBFixer
 * data/4jhw/4jhw_clean.pdb — missing residues not in long (> 10 residues) terminal fragments added back in
 ### Example
 4jhw
 * Load 4jhw.pdb into edit_seqres.ipynb to delete residues and split chain in the SEQRES near missing loop that will not be added back in. Write this to 4jhw_noloop.pdb (after deleting residues), then 4jhw_noloop_seqressplit.pdb.
-* Load 4jhw.pdb into split_chain_and_cap.ipynb. Use the split_chain function to save topology and positions with chain split to 4jhw_splitchain.pdb. Then use the cap_chain function to save topology and positions with missing terminal atoms added to 4jhw_splitchain_capped.pdb.
+* Load 4jhw.pdb into split_chain.ipynb. Use the split_chain function to save topology and positions with chain split to 4jhw_splitchain.pdb. Then use the cap_chain function to save topology and positions with missing terminal atoms added to 4jhw_splitchain_capped.pdb.
 * Manually copy the SEQRES from 4jhw_noloop_seqressplit.pdb to the top of 4jhw_splitchain_capped.pdb.
 * Load 4jhw_splitchain_capped.pdb into clean_pdb.ipynb. Follow PDBFixer protocol (findMissingResidues(), remove terminal missing fragments from fixer.missingResidues, findNonStandardResidues(), removeHeterogens, findMissingAtoms(), addMissingAtoms()). Write to 4jhw_clean.pdb.
 ### Instructions for 5k6f
