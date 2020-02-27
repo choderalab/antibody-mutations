@@ -142,4 +142,3 @@ Rafal’s tips:
 10. Smooth (can do this multiple times, will remove the faster movements more and more)
 11. Save as pymol sessions (if need to align complexes in different movies, can just load other complex into this session and then superpose/align the other complex then save as movie)
 12. File > Export as movie.. MPEG (make the window as big of a square as possible —> 1600x1600 for high quality)
-Save every 0.1-0.5 ns
